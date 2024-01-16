@@ -1,5 +1,8 @@
+use rand::{thread_rng, Rng};
+
 use super::cards::{Card, Rank, Suit};
 
+#[derive(Debug, Clone)]
 pub struct Deck {
     cards: Vec<Card>,
 }
@@ -29,5 +32,24 @@ impl Default for Deck {
             }
         }
         deck
+    }
+}
+
+impl Deck {
+    pub fn shuffle(&mut self) {
+        let mut rng = thread_rng();
+        for i in (1..self.cards.len()).rev() {
+            let j = rng.gen_range(0..i + 1);
+            self.cards.swap(i, j);
+        }
+    }
+
+    pub fn deal(&mut self) -> Option<Card> {
+        if self.cards.len() <= 1 {
+            self.cards = Default::default();
+            self.shuffle();
+        }
+
+        self.cards.pop()
     }
 }
